@@ -68,5 +68,6 @@ cluster_annotation/                   # repository root
 python cluster_annotation.py --video_folder dlc2action_project/video \
   --feature_folder dlc2action_project/feature \
   --annotation_folder dlc2action_project/Annotations \
-  --feature_suffix .npy --hbmae
+  --feature_suffix .npy --skip_dlc2action --hbmae \
+  --sampling 1 --clip_length 200
 ```
