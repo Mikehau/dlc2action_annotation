@@ -13,6 +13,8 @@ A PyQt5-based tool for visualizing, clustering, and interactively annotating sho
    ```bash
    git clone https://github.com/Mikehau/dlc2action_annotation.git
    cd dlc2action_annotation
+   git fetch origin hbmae:hbmae
+   git checkout hbmae
    ```
 2. **Create & activate environment** (conda or venv), then install dependencies:
 
