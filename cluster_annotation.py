@@ -952,8 +952,9 @@ class MainWindow(QWidget):
         elif self.hbmae:
             self.data = np.load(self.feature_files[0],allow_pickle=True).item()["embeddings"]
             length = len(self.data)
-            frames = np.arange(0,length)
-            self.data_idx = frames[::self.sampling]
+            frames_idx = np.arange(0,length)
+            self.all_idx = np.arange(0,length)
+            self.data_idx = frames_idx[::self.sampling]
             self.data = self.data[::self.sampling]
             k = self.clip_length//2
             N = self.data_idx[-1]
@@ -966,11 +967,13 @@ class MainWindow(QWidget):
                 with open(self.labels_path, "rb") as f:
                     saved = pickle.load(f)
                 self.label_dict = saved["label_dict"]
-                self.labels     = saved["labels"]
+                self.full_labels = saved["labels"]
+                self.labels = self.full_labels[self.data_idx]
                 print(f"Loaded {len(self.labels)} labels from {self.labels_path}")
 
             else:
                 self.labels = []
+                self.full_labels = np.zeros(length)
                 for video in videos:
                     annotation = Annotation(self.annotation_files[0])
                     for v, s, e, clip in self.frames:
@@ -1235,12 +1238,13 @@ class MainWindow(QWidget):
 
     def save_full(self):
         os.makedirs(self.annotation_folder, exist_ok=True)
+        self.full_labels[self.data_idx] = self.labels
         with open(self.labels_path, "wb") as f:
             pickle.dump({
                 "label_dict": self.label_dict,
-                "labels":     self.labels
+                "labels":     self.full_labels
             }, f)
-        print(f"Saved {len(self.labels)} labels to {self.labels_path}")
+        print(f"Saved {len(self.full_labels)} labels to {self.labels_path}")
 
     def reopen(self):
         print("reopen(self): window closed")
